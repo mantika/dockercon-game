@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+        <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+        <script src="http://chancejs.com/chance.min.js"></script>
+        <link rel="stylesheet" href="signin.css"/>
+        <link rel="stylesheet" href="main.css"/>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.7/socket.io.min.js"></script>
+        <script>
+            $(document).ready(function() {
+
+                var socket;
+
+                window.feedback = function(value) {
+                    socket.emit('feedback', value);
+                };
+
+                window.play = function() {
+                    var username = $("#inputEmail").val();
+
+                    if (username == "") {
+                        username = chance.name();
+                    }
+                    socket = io.connect('http://localhost:8080', {reconnection: false});
+
+                    socket.on('connect', function() {
+                        $(".form-signin").show();
+                        $("#container").hide();
+                    });
+
+
+                    socket.on('newround', function(data) {
+                        $('.image').css("background-image", "url("+data.image_url+")");
+                        $(".winner").empty();
+                    });
+
+                    socket.on('winner', function(name) {
+                        $(".winner").text('The winner is: '+ name);
+                    });
+
+
+                    socket.emit('newplayer', username, function() {
+                        $(".form-signin").hide();
+                        $(".name").text('Player: '+ username);
+                        $("#container").show();
+                    });
+                };
+
+
+                $("form").submit(function(){
+                    play();
+                    return false;
+                });
+
+            });
+        </script>
+    </head>
+
+    <body>
+
+        <div class="container">
+
+            <form class="form-signin">
+                <h2 class="form-signin-heading">Enter your name</h2>
+                <input type="text" id="inputEmail" class="form-control" placeholder="Name"  autofocus="">
+                <br />
+                <button class="btn btn-lg btn-primary btn-block" type="button" onclick="play()" >Submit</button>
+                <button class="btn btn-lg btn-primary btn-block" type="button" onclick="play()">Random name</button>
+            </form>
+
+            <div id="container" style="display: none">
+                <h2 class="name"></h2>
+                <div class="frame" style="display: block;"><div class="image"  style="display: block; background-image: url(http://1.bp.blogspot.com/_qEbjiFbQWGM/TCBVlN3mkYI/AAAAAAAADCM/7CjYqUHwbgY/s1600/workshop_modell_0126.jpg)"></div></div>
+                <div class="feedback">
+                    <div class="feedback-option" onclick="feedback(true)"  style=" background-image: url(http://findicons.com/files/icons/808/on_stage/128/symbol_check.png)"></div>
+                    <div class="feedback-option" onclick="feedback(false)" style=" background-image: url(http://findicons.com/files/icons/744/juicy_fruit/128/cross.png)"></div>
+                </div>
+                <div class="winner">
+                </div>
+            </div>
+
+        </div> <!-- /container -->
+
+        <div></div>
+        <script type="text/javascript" charset="utf-8">
+            $(document).ready(function() {
+
+
+            });
+        </script>
+
+    </body>
+
+</html>
