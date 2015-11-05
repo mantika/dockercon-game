@@ -24,7 +24,7 @@
                     if (username == "") {
                         username = chance.name();
                     }
-                    socket = io.connect('http://localhost:8080', {reconnection: false});
+                    socket = io.connect('http://localhost:9090', {reconnection: false});
 
                     socket.on('connect', function() {
                         $(".form-signin").show();
@@ -43,8 +43,7 @@
                     });
 
 
-                    socket.emit('newplayer', username, function(image) {
-                        $('.image').css("background-image", "url("+image+")");
+                    socket.emit('newplayer', username, function() {
                         $(".form-signin").hide();
                         $(".name").text('Player: '+ username);
                         $("#container").show();

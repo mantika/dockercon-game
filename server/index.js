@@ -4,7 +4,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var fs = require('fs');
 
-server.listen(8080);
+server.listen(9090);
 
 app.use(express.static('public'));
 
@@ -22,10 +22,11 @@ var currentImage;
 
 
 io.on('connection', function (socket) {
-  socket.on('newplayer', function(username, fn){
+  socket.on('newplayer', function(username, fn) {
     players[this] = {name: username, score: 0};
     console.log("New player has joined", username);
-    fn(currentImage);
+    fn();
+    this.emit('newround', {image_url: currentImage});
   });
   socket.on('disconnect', function() {
     delete players[this];
@@ -36,7 +37,7 @@ io.on('connection', function (socket) {
         console.log("We have a winner: ",players[this].name);
         hasWinner = true;
         io.emit('winner', players[this].name);
-        setTimeout(newRound, 5000);
+        setTimeout(newRound, 3000);
       }
     }
   });
