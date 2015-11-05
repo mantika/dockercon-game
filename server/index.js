@@ -18,19 +18,19 @@ var cleanImages = fs.readdirSync('./green')
 var spamImages = fs.readdirSync('./red')
 var isSpam;
 var hasWinner;
+var currentImage;
 
 
 io.on('connection', function (socket) {
   socket.on('newplayer', function(username, fn){
     players[this] = {name: username, score: 0};
     console.log("New player has joined", username);
-    fn();
+    fn(currentImage);
   });
   socket.on('disconnect', function() {
     delete players[this];
   });
   socket.on('feedback', function(data) {
-    console.log(data, isSpam)
     if (!hasWinner) {
       if (data == isSpam) {
         console.log("We have a winner: ",players[this].name);
@@ -56,6 +56,8 @@ function newRound() {
     var image = cleanImages[Math.floor(Math.random()*cleanImages.length)];
     message.image_url = 'https://s3.amazonaws.com/mantika-pictures/green/'+image;
   }
+
+  currentImage = message.image_url;
 
   console.log("Emitting new round with image  ", message.image_url);
   io.emit('newround', message)

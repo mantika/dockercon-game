@@ -34,15 +34,17 @@
 
                     socket.on('newround', function(data) {
                         $('.image').css("background-image", "url("+data.image_url+")");
-                        $(".winner").empty();
+                        $(".winner").hide();
                     });
 
                     socket.on('winner', function(name) {
-                        $(".winner").text('The winner is: '+ name);
+                        $(".winner").show();
+                        $(".winner .name").text(name);
                     });
 
 
-                    socket.emit('newplayer', username, function() {
+                    socket.emit('newplayer', username, function(image) {
+                        $('.image').css("background-image", "url("+image+")");
                         $(".form-signin").hide();
                         $(".name").text('Player: '+ username);
                         $("#container").show();
@@ -78,7 +80,9 @@
                     <div class="feedback-option" onclick="feedback(true)"  style=" background-image: url(http://findicons.com/files/icons/808/on_stage/128/symbol_check.png)"></div>
                     <div class="feedback-option" onclick="feedback(false)" style=" background-image: url(http://findicons.com/files/icons/744/juicy_fruit/128/cross.png)"></div>
                 </div>
-                <div class="winner">
+                <div class="winner" style="display: none;">
+                    The winner is:
+                    <span class="name"></span>
                 </div>
             </div>
 
