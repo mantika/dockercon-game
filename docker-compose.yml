@@ -1,0 +1,22 @@
+scorer:
+    image: mantika/moderations-scoring-pictures-api:convnet_update
+    devices:
+        - /dev/nvidiactl
+        - /dev/nvidia-uvm
+        - /dev/nvidia0
+    volumes:
+        - /usr/local/cuda-7.5:/usr/local/cuda-7.5
+        - /usr/local/cuda-7.5/lib64
+        - /usr/lib/x86_64-linux-gnu/libcuda.so.352.55:/usr/lib/x86_64-linux-gnu/libcuda.so
+        - /usr/lib/x86_64-linux-gnu/libcuda.so.352.55:/usr/lib/x86_64-linux-gnu/libcuda.so.1
+
+player:
+    build: player/
+    links:
+        - scorer:scorer
+        - server:server
+
+server:
+    build: server/
+    ports:
+        - 9090:9090
