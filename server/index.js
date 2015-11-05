@@ -50,11 +50,11 @@ function newRound() {
   if (arrayPick == 0) {
     isSpam = true;
     var image = spamImages[Math.floor(Math.random()*spamImages.length)];
-    message.image_url = 'https://s3.amazonaws.com/mantika-pictures/red/'+image;
+    message.image_url = 'http://s3.amazonaws.com/mantika-pictures/red/'+image;
   } else {
     isSpam = false;
     var image = cleanImages[Math.floor(Math.random()*cleanImages.length)];
-    message.image_url = 'https://s3.amazonaws.com/mantika-pictures/green/'+image;
+    message.image_url = 'http://s3.amazonaws.com/mantika-pictures/green/'+image;
   }
 
   currentImage = message.image_url;
