@@ -17,6 +17,7 @@ var players = {}
 var cleanImages = fs.readdirSync('./green')
 var spamImages = fs.readdirSync('./red')
 
+io.set('transports', ['websocket']);
 
 io.on('connection', function (socket) {
   socket.on('newplayer', function(username, fn) {

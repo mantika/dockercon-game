@@ -31,7 +31,7 @@
                     if (username == "") {
                         username = chance.name();
                     }
-                    socket = io({reconnection: false});
+                    socket = io({reconnection: false, transports: ['websocket']});
 
                     socket.on('connect', function() {
                         $(".form-signin").show();
