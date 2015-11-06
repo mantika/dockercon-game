@@ -16,54 +16,66 @@ var players = {}
 
 var cleanImages = fs.readdirSync('./green')
 var spamImages = fs.readdirSync('./red')
-var isSpam;
-var hasWinner;
-var currentImage;
 
 
 io.on('connection', function (socket) {
   socket.on('newplayer', function(username, fn) {
-    players[this] = {name: username, score: 0};
+    players[this.id] = {name: username, score: 0};
     console.log("New player has joined", username);
-    fn();
-    this.emit('newround', {image_url: currentImage});
+    if (fn) {
+      fn();
+    }
+    newRound(this)
   });
   socket.on('disconnect', function() {
-    delete players[this];
+    delete players[this.id];
   });
-  socket.on('feedback', function(data) {
-    if (!hasWinner) {
-      if (data == isSpam) {
-        console.log("We have a winner: ",players[this].name);
-        hasWinner = true;
-        io.emit('winner', players[this].name);
-        setTimeout(newRound, 3000);
-      }
+  socket.on('feedback', function(data, fn) {
+    var self = this;
+    var player = players[this.id];
+    var correct = false;
+    if (player.image.isSpam == data) {
+      console.log("Player", player.name ,"moderated correctly");
+      player.score++;
+      correct = true;
     }
+    if (fn) {
+      fn(correct);
+    }
+    setTimeout(function(){
+      newRound(self);
+    }, 1000);
   });
 });
 
-
-function newRound() {
-  hasWinner = false;
+function getImage() {
   var arrayPick = Math.round(Math.random());
-  var message = {};
+  var image = {};
   if (arrayPick == 0) {
-    isSpam = true;
-    var image = spamImages[Math.floor(Math.random()*spamImages.length)];
-    message.image_url = 'http://s3.amazonaws.com/mantika-pictures/red/'+image;
+    var imageName = spamImages[Math.floor(Math.random()*spamImages.length)];
+    image.url = 'http://s3.amazonaws.com/mantika-pictures/red/'+imageName;
+    image.isSpam = true;
   } else {
-    isSpam = false;
-    var image = cleanImages[Math.floor(Math.random()*cleanImages.length)];
-    message.image_url = 'http://s3.amazonaws.com/mantika-pictures/green/'+image;
+    var imageName = cleanImages[Math.floor(Math.random()*cleanImages.length)];
+    image.url = 'http://s3.amazonaws.com/mantika-pictures/green/'+imageName;
+    image.isSpam = false;
   }
-
-  currentImage = message.image_url;
-
-  console.log("Emitting new round with image  ", message.image_url);
-  io.emit('newround', message)
+  return image;
 }
 
-newRound();
+
+function newRound(playerSocket) {
+  var image = getImage();
+  players[playerSocket.id].image = image;
+  playerSocket.emit('newround', {image_url: image.url});
+}
+
+
+setInterval(function() {
+  console.log("Scoreboard:");
+  for (player in players) {
+    console.log(players[player].name, ":", players[player].score);
+  }
+}, 5000)
 
 

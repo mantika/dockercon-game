@@ -1,10 +1,12 @@
-.name {
+
+.winner {
+    font-size: xx-large;
+}
+
+.centered {
     text-align: center;
 }
 
-.feedback {
-    text-align: center;
-}
 .feedback-option {
     width: 100px;
     height: 100px;
