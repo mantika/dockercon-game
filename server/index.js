@@ -56,13 +56,12 @@ function getImage() {
   var image = {};
   if (arrayPick == 0) {
     var imageName = spamImages[Math.floor(Math.random()*spamImages.length)];
-    image.url = 'http://s3.amazonaws.com/mantika-pictures/red/'+imageName;
     image.isSpam = true;
   } else {
     var imageName = cleanImages[Math.floor(Math.random()*cleanImages.length)];
-    image.url = 'http://s3.amazonaws.com/mantika-pictures/green/'+imageName;
     image.isSpam = false;
   }
+  image.url = 'http://s3.amazonaws.com/mantika-pictures/'+imageName;
   return image;
 }
 
