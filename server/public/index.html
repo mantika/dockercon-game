@@ -94,7 +94,7 @@
                 <table id="scores" class="ui-responsive ui-table table-stroke" style="margin: 0 auto; width: 30%;" >
                     <thead class="centered">
                         <tr>
-                            <th>Name</th> <th>Score</th> <th>Correct</th> <th>Incorrect</th>
+                            <th>Name</th> <th>Score</th> <th>Incorrect</th>
                         </tr>
                     </thead>
                     <tbody id="scores_body">
@@ -116,7 +116,7 @@
 
             window.renderScores = function(scores) {
                 var tbody = $('#scores_body'),
-                props = ["name", "score", "correct", "incorrect"];
+                props = ["name", "score", "incorrect"];
                 tbody.empty();
                 $.each(scores, function(i, score) {
                     var tr = $('<tr>');

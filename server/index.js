@@ -21,7 +21,7 @@ io.set('transports', ['websocket']);
 
 io.on('connection', function (socket) {
   socket.on('newplayer', function(username, fn) {
-    players[this.id] = {name: username, score: 0};
+    players[this.id] = {name: username, score: 0, incorrect: 0};
     console.log("New player has joined", username);
     if (fn) {
       fn();
@@ -39,6 +39,8 @@ io.on('connection', function (socket) {
       console.log("Player", player.name ,"moderated correctly");
       player.score++;
       correct = true;
+    } else {
+      player.incorrect++;
     }
     if (fn) {
       fn(correct);
@@ -79,11 +81,8 @@ setInterval(function() {
   console.log("Scoreboard:");
   var scores = [];
   for (player in players) {
-    var score = {};
-    score.name = players[player].name;
-    score.score = players[player].score;
-    scores.push(score);
     console.log(players[player].name, ":", players[player].score);
+    scores.push(players[player]);
   }
   scores.sort(function(a,b){
     return b.score - a.score;
