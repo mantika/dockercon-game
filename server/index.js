@@ -4,7 +4,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var fs = require('fs');
 
-server.listen(9090);
+server.listen(9090, "0.0.0.0");
 
 app.use(express.static('public'));
 

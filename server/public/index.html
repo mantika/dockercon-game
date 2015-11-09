@@ -21,7 +21,7 @@
                         } else {
                             $(".winner").text("INCORRECT!!").css('color', 'red');
                         }
-                    
+
                     });
                 };
 
@@ -32,6 +32,11 @@
                         username = chance.name();
                     }
                     socket = io({reconnection: false, transports: ['websocket']});
+
+                    socket.on('disconnect', function() {
+                        $('.disconnected').show();
+                        $('.disconnected').modernBlink('start');
+                    });
 
                     socket.on('connect', function() {
                         $(".form-signin").show();
@@ -72,8 +77,7 @@
                 <button class="btn btn-lg btn-primary btn-block" type="button" onclick="play()" >Submit</button>
                 <button class="btn btn-lg btn-primary btn-block" type="button" onclick="play()">Random name</button>
             </form>
-
-            <div id="container" style="display: none">
+            <div id="container"  style="display: none;">
                 <h2 class="name centered"></h2>
                 <div class="frame" style="display: block;"><div class="image"  style="display: block; background-image: url(http://1.bp.blogspot.com/_qEbjiFbQWGM/TCBVlN3mkYI/AAAAAAAADCM/7CjYqUHwbgY/s1600/workshop_modell_0126.jpg)"></div></div>
                 <div class="feedback centered">
@@ -83,17 +87,19 @@
                 <div class="winner centered">
                 </div>
             </div>
+            <div class="disconnected" style="display: none;">
+                Disconnected =(
+            </div>
 
         </div> <!-- /container -->
 
         <div></div>
-        <script type="text/javascript" charset="utf-8">
-            $(document).ready(function() {
-
-
-            });
-        </script>
-
     </body>
+    <script src="blink.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function(){
+            $('.disconnected').modernBlink({ duration: 2000, auto: false});
+        });
+    </script>
 
 </html>
