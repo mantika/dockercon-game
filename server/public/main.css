@@ -1,3 +1,7 @@
+th, td {
+    text-align: center !important;
+}
+
 .disconnected{
     position: absolute;
     top: 0;
@@ -14,10 +18,11 @@
 
 .winner {
     font-size: xx-large;
+    height: 50px;
 }
 
 .centered {
-    text-align: center;
+    text-align: center; 
 }
 
 .feedback-option {

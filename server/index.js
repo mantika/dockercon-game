@@ -74,9 +74,15 @@ function newRound(playerSocket) {
 
 setInterval(function() {
   console.log("Scoreboard:");
+  var scores = [];
   for (player in players) {
+    var score = {};
+    score.name = players[player].name;
+    score.score = players[player].score;
+    scores.push(score);
     console.log(players[player].name, ":", players[player].score);
   }
+  io.emit('scores', scores);
 }, 5000)
 
 

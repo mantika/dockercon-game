@@ -43,6 +43,10 @@
                         $("#container").hide();
                     });
 
+                    socket.on('scores', function(scores) {
+                        console.log(scores);
+                        renderScores(scores);
+                    });
 
                     socket.on('newround', function(data) {
                         $('.image').css("background-image", "url("+data.image_url+")");
@@ -78,14 +82,24 @@
                 <button class="btn btn-lg btn-primary btn-block" type="button" onclick="play()">Random name</button>
             </form>
             <div id="container"  style="display: none;">
-                <h2 class="name centered"></h2>
+                <h2 class="centered">Does it contain spam?</h3>
+                <h3 class="name centered"></h3>
                 <div class="frame" style="display: block;"><div class="image"  style="display: block; background-image: url(http://1.bp.blogspot.com/_qEbjiFbQWGM/TCBVlN3mkYI/AAAAAAAADCM/7CjYqUHwbgY/s1600/workshop_modell_0126.jpg)"></div></div>
                 <div class="feedback centered">
                     <div class="feedback-option" onclick="feedback(true)"  style=" background-image: url(http://findicons.com/files/icons/808/on_stage/128/symbol_check.png)"></div>
                     <div class="feedback-option" onclick="feedback(false)" style=" background-image: url(http://findicons.com/files/icons/744/juicy_fruit/128/cross.png)"></div>
                 </div>
-                <div class="winner centered">
-                </div>
+                <div class="winner centered"></div>
+                <h2 class="centered">Scoreboard:</h2>
+                <table id="scores" class="ui-responsive ui-table table-stroke" style="margin: 0 auto; width: 30%;" >
+                    <thead class="centered">
+                        <tr>
+                            <th>Name</th> <th>Score</th> <th>Correct</th> <th>Incorrect</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scores_body">
+                    </tbody>
+                </table>
             </div>
             <div class="disconnected" style="display: none;">
                 Disconnected =(
@@ -99,6 +113,19 @@
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function(){
             $('.disconnected').modernBlink({ duration: 2000, auto: false});
+
+            window.renderScores = function(scores) {
+                var tbody = $('#scores_body'),
+                props = ["name", "score", "correct", "incorrect"];
+                tbody.empty();
+                $.each(scores, function(i, score) {
+                    var tr = $('<tr>');
+                    $.each(props, function(i, prop) {
+                        $('<td>').html(score[prop]).appendTo(tr);
+                    });
+                    tbody.append(tr);
+                });
+            }
         });
     </script>
 
