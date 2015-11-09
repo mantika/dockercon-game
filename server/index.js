@@ -67,8 +67,11 @@ function getImage() {
 
 function newRound(playerSocket) {
   var image = getImage();
-  players[playerSocket.id].image = image;
-  playerSocket.emit('newround', {image_url: image.url});
+  // New round might be firing right after player disconnected
+  if (players[playerSocket.id]) {
+    players[playerSocket.id].image = image;
+    playerSocket.emit('newround', {image_url: image.url});
+  }
 }
 
 
@@ -82,6 +85,10 @@ setInterval(function() {
     scores.push(score);
     console.log(players[player].name, ":", players[player].score);
   }
+  scores.sort(function(a,b){
+    return b.score - a.score;
+  });
+
   io.emit('scores', scores);
 }, 5000)
 
