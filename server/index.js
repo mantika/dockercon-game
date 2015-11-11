@@ -3,6 +3,7 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var fs = require('fs');
+var os = require('os');
 
 server.listen(9090, "0.0.0.0");
 
@@ -71,21 +72,20 @@ function newRound(playerSocket) {
   // New round might be firing right after player disconnected
   if (players[playerSocket.id]) {
     players[playerSocket.id].image = image;
-    playerSocket.emit('newround', {image_url: image.url});
+    playerSocket.emit('newround', {image_url: image.url, hostname: os.hostname()});
   }
 }
 
+function scoresorter(a,b) {
+  return b - a;
+}
 
 setInterval(function() {
-  console.log("Scoreboard:");
   var scores = [];
   for (player in players) {
-    console.log(players[player].name, ":", players[player].score);
     scores.push(players[player]);
   }
-  scores.sort(function(a,b){
-    return b.score - a.score;
-  });
+  scores.sort(scoresorter);
 
   io.emit('scores', scores);
 }, 5000)

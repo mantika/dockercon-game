@@ -2,6 +2,7 @@ th, td {
     text-align: center !important;
 }
 
+
 .disconnected{
     position: absolute;
     top: 0;
@@ -26,17 +27,17 @@ th, td {
 }
 
 .feedback-option {
-    width: 100px;
-    height: 100px;
-    background-size: 100%;
+    position: inherit;
+    width: 70px !important;
+    height: 70px;
+    background-size: 100%; 
     display: inline-block;
-    cursor: pointer;
+    /*cursor: pointer;*/
 }
 
 #container {
     margin: auto !important;
     display: block;
-    height: 500px;
     position: relative;
     list-style-type: none;
     -webkit-touch-callout: none;
