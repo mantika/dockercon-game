@@ -77,7 +77,7 @@ function newRound(playerSocket) {
 }
 
 function scoresorter(a,b) {
-  return b - a;
+  return b.score - a.score;
 }
 
 setInterval(function() {
